@@ -1,0 +1,135 @@
+/* Custom Styles for EchoScent */
+
+:root {
+    --cream: #F5F5F0;
+    --charcoal: #1A1A1A;
+    --gray: #707070;
+    --gold: #C5A059;
+}
+
+body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    scroll-behavior: smooth;
+    cursor: default;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 4px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--cream);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--charcoal);
+    border-radius: 10px;
+}
+
+/* Section Transitions */
+section {
+    transition: opacity 1s ease-in-out, transform 1s ease-in-out;
+}
+
+section.hidden {
+    display: none;
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+section.active {
+    display: flex;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Emotion Tags */
+.emotion-tag.selected {
+    background-color: var(--charcoal);
+    color: var(--cream);
+    border-color: var(--charcoal);
+}
+
+/* Color Moods */
+.color-mood.selected {
+    transform: scale(1.2);
+    border-color: var(--charcoal);
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+/* Floating Words Animation */
+.floating-word {
+    position: absolute;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    color: rgba(245, 245, 240, 0.3);
+    pointer-events: none;
+    white-space: nowrap;
+    filter: blur(1px);
+    animation: float-around 15s infinite ease-in-out;
+}
+
+@keyframes float-around {
+    0% {
+        transform: translate(0, 0) rotate(0deg);
+        opacity: 0;
+    }
+    10% {
+        opacity: 0.4;
+    }
+    90% {
+        opacity: 0.4;
+    }
+    100% {
+        transform: translate(var(--tx), var(--ty)) rotate(var(--tr));
+        opacity: 0;
+    }
+}
+
+/* Glassmorphism for Perfume Mockup */
+#perfume-mockup {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(10px);
+}
+
+/* Custom Cursor (Optional - adds luxury feel) */
+.custom-cursor {
+    width: 20px;
+    height: 20px;
+    border: 1px solid var(--charcoal);
+    border-radius: 50%;
+    position: fixed;
+    pointer-events: none;
+    z-index: 9999;
+    transition: transform 0.1s ease, background 0.3s ease;
+}
+
+/* Utilities */
+.font-serif {
+    font-family: 'Playfair Display', serif;
+}
+
+.font-sans {
+    font-family: 'Inter', sans-serif;
+}
+
+/* Hero Title Entrance */
+#hero-title.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+#hero-subtitle.visible {
+    opacity: 1;
+}
+
+#hero-button-container.visible {
+    opacity: 1;
+}
+
+/* Textarea focus glow */
+#memory-input:focus {
+    background: linear-gradient(transparent 95%, rgba(197, 160, 89, 0.1));
+}

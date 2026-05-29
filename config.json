@@ -1,0 +1,14 @@
+{
+  "huggingface": {
+    "textUrl": "https://api-inference.huggingface.co/models/mistralai/Mistral-7B-v0.1",
+    "visionUrl": "https://api-inference.huggingface.co/models/Salesforce/BLIP-image-captioning-base",
+    "apiKey": "",
+    "temperature": 0.8,
+    "maxTokens": 500
+  },
+  "fallback": {
+    "enabled": true,
+    "reason": "当AI API不可用时使用关键词匹配算法"
+  },
+  "aiPriority": ["huggingface", "fallback"]
+}

@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="EchoScent transforms your cherished memories into unique fragrance concepts. Experience the art of scent storytelling with AI-powered perfume creation.">
+    <meta name="keywords" content="perfume, fragrance, scent, AI, memory, emotions, luxury, personalized">
+    <meta name="author" content="EchoScent">
+    <meta property="og:title" content="EchoScent | Transform Memories into Scent">
+    <meta property="og:description" content="Transform your cherished memories into unique fragrance concepts">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://echoscent.app">
+    <meta property="og:image" content="https://echoscent.app/og-image.jpg">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="EchoScent | Transform Memories into Scent">
+    <meta name="twitter:description" content="Transform your cherished memories into unique fragrance concepts">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <title>EchoScent | Transform Memories into Scent</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-[#F5F5F0] text-[#1A1A1A] font-['Inter'] overflow-x-hidden">
+    <!-- Background Canvas for Fog/Particles -->
+    <canvas id="bg-canvas" class="fixed top-0 left-0 w-full h-full -z-10 pointer-events-none opacity-40"></canvas>
+
+    <!-- Main Container -->
+    <main id="app">
+        <!-- Hero Section -->
+        <section id="hero" class="h-screen flex flex-col items-center justify-center text-center px-4">
+            <div class="space-y-6">
+                <h1 class="text-5xl md:text-7xl font-['Playfair_Display'] tracking-tight opacity-0 translate-y-10 transition-all duration-1000 ease-out" id="hero-title">
+                    What does your memory smell like?
+                </h1>
+                <p class="text-lg md:text-xl text-[#707070] font-light tracking-wide opacity-0 transition-all duration-1000 delay-300" id="hero-subtitle">
+                    Transform memories into scent.
+                </p>
+                <div class="pt-10 opacity-0 transition-all duration-1000 delay-500" id="hero-button-container">
+                    <button id="btn-begin" class="px-12 py-4 border border-[#1A1A1A] hover:bg-[#1A1A1A] hover:text-[#F5F5F0] transition-all duration-500 tracking-[0.2em] uppercase text-xs font-medium">
+                        Begin
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Memory Input Section -->
+        <section id="input-section" class="min-h-screen hidden flex-col items-center justify-center py-20 px-6 max-w-4xl mx-auto">
+            <div class="w-full space-y-12">
+                <div class="text-center space-y-4">
+                    <h2 class="text-3xl md:text-4xl font-['Playfair_Display']">The Memory Journal</h2>
+                    <p class="text-[#707070] font-light italic">Close your eyes. Recall a moment.</p>
+                </div>
+
+                <!-- Text Area -->
+                <div class="relative group">
+                    <textarea id="memory-input" 
+                        class="w-full h-64 bg-transparent border-b border-[#1A1A1A]/20 focus:border-[#1A1A1A] outline-none py-4 text-xl md:text-2xl font-['Playfair_Display'] placeholder:text-[#1A1A1A]/10 transition-colors resize-none"
+                        placeholder="Describe a memory..."></textarea>
+                    <div class="absolute bottom-4 right-0 text-[10px] tracking-widest text-[#707070] uppercase">Words from the heart</div>
+                </div>
+
+                <!-- Image Upload (Mock) -->
+                <div class="flex flex-col items-center justify-center p-8 border border-dashed border-[#1A1A1A]/10 rounded-sm hover:border-[#1A1A1A]/30 transition-all cursor-pointer group" id="image-upload">
+                    <div class="text-[#707070] group-hover:text-[#1A1A1A] transition-colors mb-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
+                    </div>
+                    <span class="text-[10px] uppercase tracking-widest text-[#707070]">Upload a visual memory (optional)</span>
+                    <input type="file" id="file-input" class="hidden" accept="image/*">
+                    <div id="image-preview" class="mt-4 hidden max-w-xs rounded overflow-hidden">
+                        <img src="" alt="Preview" class="w-full h-auto">
+                    </div>
+                </div>
+
+                <!-- Emotions -->
+                <div class="space-y-6">
+                    <p class="text-[10px] uppercase tracking-[0.2em] text-[#707070] text-center">Connected Emotions</p>
+                    <div class="flex flex-wrap justify-center gap-3" id="emotion-tags">
+                        <button class="emotion-tag px-6 py-2 border border-[#1A1A1A]/10 rounded-full text-sm hover:border-[#1A1A1A] transition-all">nostalgic</button>
+                        <button class="emotion-tag px-6 py-2 border border-[#1A1A1A]/10 rounded-full text-sm hover:border-[#1A1A1A] transition-all">peaceful</button>
+                        <button class="emotion-tag px-6 py-2 border border-[#1A1A1A]/10 rounded-full text-sm hover:border-[#1A1A1A] transition-all">warm</button>
+                        <button class="emotion-tag px-6 py-2 border border-[#1A1A1A]/10 rounded-full text-sm hover:border-[#1A1A1A] transition-all">lonely</button>
+                        <button class="emotion-tag px-6 py-2 border border-[#1A1A1A]/10 rounded-full text-sm hover:border-[#1A1A1A] transition-all">bittersweet</button>
+                        <button class="emotion-tag px-6 py-2 border border-[#1A1A1A]/10 rounded-full text-sm hover:border-[#1A1A1A] transition-all">joyful</button>
+                        <button class="emotion-tag px-6 py-2 border border-[#1A1A1A]/10 rounded-full text-sm hover:border-[#1A1A1A] transition-all">dreamy</button>
+                    </div>
+                </div>
+
+                <!-- Color Mood -->
+                <div class="space-y-6">
+                    <p class="text-[10px] uppercase tracking-[0.2em] text-[#707070] text-center">Color Palette</p>
+                    <div class="flex justify-center gap-4" id="color-moods">
+                        <button class="color-mood w-10 h-10 rounded-full border border-[#1A1A1A]/10 bg-[#E8DCC4] hover:scale-110 transition-transform" data-mood="warm" title="Warm Tones"></button>
+                        <button class="color-mood w-10 h-10 rounded-full border border-[#1A1A1A]/10 bg-[#C4D3E8] hover:scale-110 transition-transform" data-mood="cool" title="Cool Tones"></button>
+                        <button class="color-mood w-10 h-10 rounded-full border border-[#1A1A1A]/10 bg-[#D8D8D8] hover:scale-110 transition-transform" data-mood="muted" title="Muted"></button>
+                        <button class="color-mood w-10 h-10 rounded-full border border-[#1A1A1A]/10 bg-[#E8C4E4] hover:scale-110 transition-transform" data-mood="vibrant" title="Vibrant"></button>
+                    </div>
+                </div>
+
+                <!-- Submit -->
+                <div class="flex justify-center pt-8">
+                    <button id="btn-generate" class="px-16 py-4 bg-[#1A1A1A] text-[#F5F5F0] hover:bg-[#C5A059] transition-all duration-500 tracking-[0.2em] uppercase text-xs font-medium">
+                        Generate Scent
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Loading Experience -->
+        <section id="loading-section" class="h-screen hidden flex-col items-center justify-center bg-[#1A1A1A] text-[#F5F5F0] overflow-hidden">
+            <div id="loading-content" class="relative w-full h-full flex items-center justify-center">
+                <div class="text-center z-10">
+                    <div id="loading-bar" class="w-48 h-[1px] bg-[#F5F5F0]/20 mx-auto relative overflow-hidden">
+                        <div id="loading-progress" class="absolute top-0 left-0 h-full bg-[#C5A059] w-0"></div>
+                    </div>
+                    <p class="mt-8 text-[10px] uppercase tracking-[0.3em] text-[#F5F5F0]/60 font-light" id="loading-text">Distilling memories...</p>
+                </div>
+                <!-- Floating Words will be injected here by JS -->
+                <div id="floating-words-container" class="absolute inset-0 pointer-events-none"></div>
+            </div>
+        </section>
+
+        <!-- Results Page -->
+        <section id="results-section" class="min-h-screen hidden flex-col items-center py-20 px-6 max-w-6xl mx-auto">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center w-full">
+                <!-- Visual Side -->
+                <div class="flex flex-col items-center space-y-12">
+                    <div id="perfume-mockup" class="relative w-64 h-80 bg-white shadow-2xl rounded-sm border border-[#1A1A1A]/5 flex flex-col items-center justify-center p-8 transition-all duration-1000">
+                        <div class="w-1 h-8 bg-[#C5A059] mb-4"></div>
+                        <div class="border border-[#1A1A1A]/20 p-4 text-center w-full">
+                            <h3 id="result-name" class="font-['Playfair_Display'] text-xl uppercase tracking-widest">After the Rain</h3>
+                            <div class="mt-2 h-[1px] w-8 bg-[#1A1A1A]/20 mx-auto"></div>
+                            <p class="mt-2 text-[8px] tracking-[0.2em] uppercase text-[#707070]">Eau de Parfum</p>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-4 text-center">
+                        <p class="text-[10px] uppercase tracking-[0.2em] text-[#707070]">Suggested Palette</p>
+                        <div id="result-palette" class="flex gap-2">
+                            <div class="w-6 h-6 rounded-full bg-[#E8DCC4]"></div>
+                            <div class="w-6 h-6 rounded-full bg-[#707070]"></div>
+                            <div class="w-6 h-6 rounded-full bg-[#C5A059]"></div>
+                        </div>
+                    </div>
+
+                    <!-- Share Buttons -->
+                    <div class="space-y-4 text-center">
+                        <p class="text-[10px] uppercase tracking-[0.2em] text-[#707070]">Share Your Scent</p>
+                        <div class="flex gap-4" id="share-buttons">
+                            <button id="share-twitter" class="share-btn w-10 h-10 rounded-full border border-[#1A1A1A]/10 hover:border-[#1DA1F2] hover:text-[#1DA1F2] transition-all flex items-center justify-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"/></svg>
+                            </button>
+                            <button id="share-instagram" class="share-btn w-10 h-10 rounded-full border border-[#1A1A1A]/10 hover:border-[#E4405F] hover:text-[#E4405F] transition-all flex items-center justify-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+                            </button>
+                            <button id="share-copy" class="share-btn w-10 h-10 rounded-full border border-[#1A1A1A]/10 hover:border-[#C5A059] hover:text-[#C5A059] transition-all flex items-center justify-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                            </button>
+                        </div>
+                        <p id="share-feedback" class="text-[10px] text-[#707070] opacity-0 transition-opacity"></p>
+                    </div>
+                </div>
+
+                <!-- Info Side -->
+                <div class="space-y-12">
+                    <div class="space-y-4">
+                        <h2 id="result-title" class="text-5xl md:text-6xl font-['Playfair_Display'] leading-tight">After the Rain</h2>
+                        <p id="result-description" class="text-[#707070] text-lg font-light leading-relaxed italic italic">
+                            “This scent captures quiet nostalgia, soft rain, and the warmth of fading memories.”
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <div class="space-y-3">
+                            <h4 class="text-[10px] uppercase tracking-[0.2em] font-semibold">Top Notes</h4>
+                            <p id="result-top" class="text-sm font-light text-[#707070]">bergamot, petrichor</p>
+                        </div>
+                        <div class="space-y-3">
+                            <h4 class="text-[10px] uppercase tracking-[0.2em] font-semibold">Middle Notes</h4>
+                            <p id="result-middle" class="text-sm font-light text-[#707070]">jasmine tea, iris</p>
+                        </div>
+                        <div class="space-y-3">
+                            <h4 class="text-[10px] uppercase tracking-[0.2em] font-semibold">Base Notes</h4>
+                            <p id="result-base" class="text-sm font-light text-[#707070]">cedarwood, soft musk</p>
+                        </div>
+                    </div>
+
+                    <div class="pt-8 space-y-6">
+                        <div class="flex items-center gap-4 text-[#707070]">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+                            <span id="result-music" class="text-xs tracking-wider uppercase">Ambient: Soft Rain on Window</span>
+                        </div>
+                        <button id="btn-restart" class="text-[10px] uppercase tracking-[0.3em] border-b border-[#1A1A1A] pb-1 hover:text-[#C5A059] hover:border-[#C5A059] transition-all">
+                            Begin Another Journey
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="bg-[#1A1A1A] text-[#F5F5F0] py-16 px-6">
+            <div class="max-w-6xl mx-auto">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+                    <div class="col-span-2">
+                        <h3 class="font-['Playfair_Display'] text-2xl mb-4">EchoScent</h3>
+                        <p class="text-[#707070] text-sm font-light leading-relaxed max-w-md">
+                            Transforming memories into scent since 2024. We believe that every memory has a fragrance, and every fragrance tells a story.
+                        </p>
+                    </div>
+                    <div>
+                        <h4 class="text-[10px] uppercase tracking-[0.2em] mb-4">Explore</h4>
+                        <ul class="space-y-3 text-sm text-[#707070]">
+                            <li><a href="#" class="hover:text-[#C5A059] transition-colors">About Us</a></li>
+                            <li><a href="#" class="hover:text-[#C5A059] transition-colors">Our Story</a></li>
+                            <li><a href="#" class="hover:text-[#C5A059] transition-colors">Press</a></li>
+                            <li><a href="#" class="hover:text-[#C5A059] transition-colors">Careers</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="text-[10px] uppercase tracking-[0.2em] mb-4">Connect</h4>
+                        <ul class="space-y-3 text-sm text-[#707070]">
+                            <li><a href="#" class="hover:text-[#C5A059] transition-colors">Contact</a></li>
+                            <li><a href="#" class="hover:text-[#C5A059] transition-colors">Partnerships</a></li>
+                            <li><a href="#" class="hover:text-[#C5A059] transition-colors">Privacy Policy</a></li>
+                            <li><a href="#" class="hover:text-[#C5A059] transition-colors">Terms of Service</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="pt-8 border-t border-[#F5F5F0]/10 flex flex-col md:flex-row justify-between items-center gap-4">
+                    <p class="text-[10px] text-[#707070] tracking-wider">2024 EchoScent. All rights reserved.</p>
+                    <div class="flex gap-6">
+                        <a href="#" class="text-[#707070] hover:text-[#C5A059] transition-colors">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"/></svg>
+                        </a>
+                        <a href="#" class="text-[#707070] hover:text-[#C5A059] transition-colors">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+                        </a>
+                        <a href="#" class="text-[#707070] hover:text-[#C5A059] transition-colors">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
